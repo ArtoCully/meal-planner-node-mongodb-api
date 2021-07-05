@@ -1,4 +1,4 @@
 {
-  "connectionString": "mongodb://localhost/meal-planner-node-mongodb-api",
-  "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING"
+  "connectionString": "mongodb://localhost:27017/meal-planner-node-mongodb-api",
+  "secret": "#rQ8YN&wvt7ukkpYrRv$&oBfDtUSc9"
 }
