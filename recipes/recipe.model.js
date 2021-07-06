@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     title: { type: String, unique: true, required: true },
-    when: { type: String, required: true },
+    when: { type: Array, required: true },
     ingredients: { type: Array, required: true },
 }, { timestamps: true });
 
@@ -16,4 +16,4 @@ schema.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('Receipe', schema);
+module.exports = mongoose.model('Recipes', schema);

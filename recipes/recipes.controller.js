@@ -1,35 +1,42 @@
 const express = require('express');
 const router = express.Router();
-const receipeService = require('./receipe.service');
+const recipeService = require('./recipe.service');
 
 // routes
 router.get('/', getAll);
 router.get('/:id', getById);
+router.post('/', create);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 
 module.exports = router;
 
 function getAll(req, res, next) {
-    receipeService.getAll()
-        .then(receipes => res.json(receipes))
+    recipeService.getAll()
+        .then(recipes => res.json(recipes))
         .catch(err => next(err));
 }
 
 function getById(req, res, next) {
-    receipeService.getById(req.params.id)
-        .then(receipe => receipe ? res.json(receipe) : res.sendStatus(404))
+    recipeService.getById(req.params.id)
+        .then(recipe => recipe ? res.json(recipe) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
+function create(req, res, next) {
+    recipeService.create(req.body)
+        .then(() => res.json({}))
         .catch(err => next(err));
 }
 
 function update(req, res, next) {
-    receipeService.update(req.params.id, req.body)
+    recipeService.update(req.params.id, req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
 
 function _delete(req, res, next) {
-    receipeService.delete(req.params.id)
+    recipeService.delete(req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
