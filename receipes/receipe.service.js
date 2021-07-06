@@ -38,7 +38,7 @@ async function update(id, receipeParam) {
     // validate
     if (!receipe) throw 'Receipe not found';
     if (receipe.title !== receipeParam.title && await Receipe.findOne({ title: receipeParam.title })) {
-        throw 'Username "' + receipeParam.username + '" is already taken';
+        throw 'Receipe title "' + receipeParam.title + '" is already taken';
     }
 
     // copy receipeParam properties to user
