@@ -14,7 +14,7 @@ function jwt() {
             // '/api/recipes',
             { url: /^\/api\/users\/authenticate/, methods: ['GET'] },
             { url: /^\/api\/users\/register/, methods: ['POST'] },
-            { url: /^\/api\/recipes/, methods: ['GET'] }
+            { url: /^\/api\/recipes/, methods: ['GET', 'POST'] }
         ]
     });
 }
