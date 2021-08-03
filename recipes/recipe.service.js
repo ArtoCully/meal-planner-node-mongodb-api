@@ -1,5 +1,6 @@
 const db = require('_helpers/db');
 const Recipe = db.Recipe;
+const userService = require('../users/user.service');
 
 module.exports = {
     getAll,
@@ -17,17 +18,33 @@ async function getById(id) {
     return await Recipe.findById(id);
 }
 
-async function create(recipeParam) {
-    console.log('receiptr', recipeParam, 'Recipe', Recipe);
+async function create(recipeParam, userId) {
+    const user = await userService.getById(userId);
+
     // validate
     if (await Recipe.findOne({ title: recipeParam.title })) {
         throw 'Recipe "' + recipeParam.title + '" is already taken';
     }
 
-    const recipe = new Recipe(recipeParam);
+    if (!user) {
+        throw 'User error when creating recipe';
+    }
 
-    // save user
+    const recipe = new Recipe(recipeParam);
+    const { recipes } = user;
+    let newRecipes = [];
+
+    if (recipes.length) {
+        if (recipes.filter((f) => f !== userId)) {
+            newRecipes = [...recipes, userId];
+        }
+    } else {
+        newRecipes.push(userId);
+    }
+
+    // save recipe
     await recipe.save();
+    await userService.update(userId, { recipes: newRecipes });
 }
 
 async function update(id, recipeParam) {

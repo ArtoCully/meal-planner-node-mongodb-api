@@ -24,7 +24,8 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next) {
-    recipeService.create(req.body)
+    const userId = req.user.sub;
+    recipeService.create(req.body, userId)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
