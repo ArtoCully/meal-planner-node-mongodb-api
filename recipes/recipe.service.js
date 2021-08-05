@@ -20,6 +20,7 @@ async function getById(id) {
 
 async function create(recipeParam, userId) {
     const user = await userService.getById(userId);
+    const { recipes } = user;
 
     // validate
     if (await Recipe.findOne({ title: recipeParam.title })) {
@@ -31,19 +32,21 @@ async function create(recipeParam, userId) {
     }
 
     const recipe = new Recipe(recipeParam);
-    const { recipes } = user;
-    let newRecipes = [];
-
-    if (recipes.length) {
-        if (recipes.filter((f) => f !== userId)) {
-            newRecipes = [...recipes, userId];
-        }
-    } else {
-        newRecipes.push(userId);
-    }
 
     // save recipe
     await recipe.save();
+
+    // save recipe id to user
+    let newRecipes = [];
+
+    if (recipes.length) {
+        if (recipes.filter((f) => f !== recipe._id)) {
+            newRecipes = [...recipes, recipe._id];
+        }
+    } else {
+        newRecipes.push(recipe._id);
+    }
+
     await userService.update(userId, { recipes: newRecipes });
 }
 
