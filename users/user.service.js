@@ -2,6 +2,7 @@ const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
+const recipeService = require('../recipes/recipe.service');
 const User = db.User;
 
 module.exports = {
@@ -10,7 +11,8 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    getAllRecipesByUserId
 };
 
 async function authenticate({ username, password }) {
@@ -72,4 +74,26 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function getAllRecipesByUserId(userId) {
+    const user = await getById(userId);
+    const userRecipeIds = user.recipes;
+
+    console.log('userRecipeIds', userRecipeIds);
+
+    if (!userRecipeIds) {
+        throw 'User does not have any recipes';
+    }
+
+    const allRecipes = await recipeService.getAll();
+    const userRecipes = allRecipes.filter((r) => userRecipeIds.includes(r._id));
+
+    console.log('userRecipes', userRecipes);
+
+    if (!userRecipes) {
+        throw 'Error getting user recipes';
+    }
+
+    return userRecipes;
 }

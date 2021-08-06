@@ -10,6 +10,7 @@ router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
+router.get('/:id/recipes', getAllRecipesByUserId)
 
 module.exports = router;
 
@@ -52,5 +53,13 @@ function update(req, res, next) {
 function _delete(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function getAllRecipesByUserId(req, res, next) {
+    const userId = req.params.id;
+    console.log('userId', userId);
+    userService.getAllRecipesByUserId(userId)
+        .then(recipes => res.json(recipes))
         .catch(err => next(err));
 }
