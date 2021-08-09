@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recipeService = require('./recipe.service');
+const userService = require('../users/user.service');
 
 // routes
 router.get('/', getAll);
@@ -23,11 +24,35 @@ function getById(req, res, next) {
         .catch(err => next(err));
 }
 
-function create(req, res, next) {
-    const userId = req.user.sub;
-    recipeService.create(req.body, userId)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+async function create(req, res, next) {
+    const user = await userService.getById(req.user.sub);
+
+    // validate user
+    if (!user) {
+        throw 'You need to be logged in to create a recipe';
+    }
+
+    try {
+        const { recipes: userRecipes } = user;
+        const recipe = await recipeService.create(req.body)
+
+        // save recipe id to user
+        let recipes = [];
+
+        if (userRecipes.length) {
+            if (userRecipes.filter((f) => f !== recipe._id)) {
+                recipes = [...userRecipes, recipe._id];
+            }
+        } else {
+            recipes.push(recipe._id);
+        }
+
+        await userService.update(user._id, { recipes: recipes });
+
+        return res.json({});
+    } catch (err) {
+        next(err);
+    }
 }
 
 function update(req, res, next) {
