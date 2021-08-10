@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const db = require('_helpers/db');
 const recipeService = require('./recipe.service');
 const userService = require('../users/user.service');
 
@@ -32,6 +33,8 @@ async function create(req, res, next) {
         throw 'You need to be logged in to create a recipe';
     }
 
+    console.log('req.body', req.body);
+
     try {
         const { recipes: userRecipes } = user;
         const recipe = await recipeService.create(req.body)
@@ -62,7 +65,7 @@ function update(req, res, next) {
 }
 
 async function _delete(req, res, next) {
-    const user = await userService.getById(req.user.sub);
+    const user = await userService.findById(req.user.sub);
 
     try {
         const deleteRecipe = await recipeService.delete(req.params.id);

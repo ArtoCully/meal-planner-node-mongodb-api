@@ -18,6 +18,8 @@ async function getById(id) {
 }
 
 async function create(recipeParam) {
+    console.log('recipeParam', recipeParam);
+
     // validate
     if (await Recipe.findOne({ title: recipeParam.title })) {
         throw 'Recipe "' + recipeParam.title + '" is already taken';
