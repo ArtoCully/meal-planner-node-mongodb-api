@@ -65,11 +65,16 @@ function update(req, res, next) {
 }
 
 async function _delete(req, res, next) {
-    const user = await userService.findById(req.user.sub);
+    const user = await userService.getById(req.user.sub);
+
+    console.log('user', user);
 
     try {
         const deleteRecipe = await recipeService.delete(req.params.id);
         const { recipes: userRecipes } = user;
+
+        console.log('deleteRecipe', deleteRecipe);
+        console.log('userRecipes', userRecipes);
 
         if (userRecipes) {
             let recipes = userRecipes.filter((f) => f !== deleteRecipe._id);
