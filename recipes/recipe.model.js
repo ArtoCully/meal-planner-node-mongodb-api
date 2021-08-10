@@ -5,6 +5,7 @@ const schema = new Schema({
     title: { type: String, unique: true, required: true },
     when: { type: Array, required: true },
     ingredients: { type: Array, required: true },
+    tags: { type: Array },
 }, { timestamps: true });
 
 schema.set('toJSON', {
