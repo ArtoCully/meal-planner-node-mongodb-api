@@ -61,8 +61,21 @@ function update(req, res, next) {
         .catch(err => next(err));
 }
 
-function _delete(req, res, next) {
-    recipeService.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => next(err));
+async function _delete(req, res, next) {
+    const user = await userService.getById(req.user.sub);
+
+    try {
+        const deleteRecipe = await recipeService.delete(req.params.id);
+        const { recipes: userRecipes } = user;
+
+        if (userRecipes) {
+            let recipes = userRecipes.filter((f) => f !== deleteRecipe._id);
+
+            await userService.update(user._id, { recipes: recipes });
+        }
+
+        return res.json({});
+    } catch (err) {
+        next(err);
+    }
 }

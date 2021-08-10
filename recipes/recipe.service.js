@@ -47,5 +47,8 @@ async function update(id, recipeParam) {
 }
 
 async function _delete(id) {
-    await Recipe.findByIdAndRemove(id);
+    const recipe = await Recipe.findById(id);
+    console.log('recipe', recipe);
+    await Recipe.findByIdAndDelete(id);
+    return recipe;
 }
