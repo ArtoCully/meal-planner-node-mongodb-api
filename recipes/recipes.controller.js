@@ -52,7 +52,7 @@ async function create(req, res, next) {
 
         await userService.update(user._id, { recipes: recipes });
 
-        return res.json({});
+        return res.json({ id: recipe._id });
     } catch (err) {
         next(err);
     }
