@@ -40,3 +40,5 @@ typings
 # Ignore dot env files
 .env
 
+.DS_Store
+
